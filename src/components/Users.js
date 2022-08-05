@@ -6,7 +6,8 @@ import { GameContext } from "../context/GameContext";
 const Users = () => {
   const authContext = useContext(AuthContext);
 
-  const { players } = authContext.gameState;
+  const { players } = authContext.game.gameState;
+  console.log(players);
 
   const [list, setList] = useState([...players]);
   const [username, setUsername] = useState("");
@@ -39,6 +40,7 @@ const Users = () => {
     const index = items.findIndex((object) => {
       return object.name === user_name;
     });
+    console.log(index);
 
     const score = Number(newScore[user_name]);
     if (!score) {
@@ -46,6 +48,7 @@ const Users = () => {
     }
 
     const item = items[index];
+    console.log(item);
 
     item.pastScore = item.currentScore;
     if (math_function === "+") {
@@ -59,29 +62,10 @@ const Users = () => {
     newScore[user_name] = "";
   };
 
-  useEffect(() => {
-    const setContext = async () => {
-      await authContext.setGameState({
-        ...authContext.gameState,
-        ["players"]: list,
-      });
-      await localStorage.setItem(
-        "game",
-        JSON.stringify({
-          num: list.length,
-          players: [...list],
-          winners: [],
-        }),
-      );
-    };
-
-    setContext();
-  }, [list]);
-
   // useEffect(() => {
   //   const setContext = async () => {
-  //     await authContext.setGameState({
-  //       ...authContext.gameState,
+  //     await authContext.setGame({
+  //       ...authContext.game.gameState,
   //       ["players"]: list,
   //     });
   //     await localStorage.setItem(
@@ -146,6 +130,7 @@ const Users = () => {
   //   }
 
   //   items[index] = item;
+
   //   setList(items);
   //   setNewScore({});
 
@@ -189,8 +174,27 @@ const Users = () => {
 
   //   setContext();
   // }, [list]);
+  useEffect(() => {
+    const setContext = async () => {
+      await authContext.setGameState({
+        ...authContext.gameState,
+        ["players"]: list,
+      });
+      await localStorage.setItem(
+        "game",
+        JSON.stringify({
+          num: list.length,
+          players: [...list],
+          winners: [],
+        }),
+      );
+    };
 
-  const listAllUser = list.map((item, i) => (
+    setContext();
+  }, [list]);
+  const users = [...list] || [];
+
+  const listAllUser = users.map((item, i) => (
     <div key={item.name}>
       <div marigin="10px">
         {String(i + 1).slice(-1) == "1" ? (

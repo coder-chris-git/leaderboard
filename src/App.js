@@ -44,9 +44,9 @@ function App() {
   if (authContext?.authState?.authenticated) {
     return (
       <>
-        <AddPlayers players={authContext.gameState} />
+        <AddPlayers />
 
-        {authContext?.gameState?.players !== "undefined" ? <Users /> : "no"}
+        {authContext?.gameState ? <Users /> : "no"}
       </>
     );
   } else {

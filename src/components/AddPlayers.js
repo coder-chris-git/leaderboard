@@ -6,11 +6,10 @@ import { GameContext } from "../context/GameContext";
 function AddPlayers() {
   const [name, setName] = useState("");
   const authContext = useContext(AuthContext);
-  const { players } = authContext.gameState || [];
+  const { players } = authContext.game.gameState || [];
   const [showAddUserInput, setShowAddUserInput] = useState(false);
 
-  const [list, setList] = useState(players);
-  console.log(list);
+  const [list, setList] = useState([...players]);
 
   const addUser = async (e) => {
     if (!name) {
@@ -32,27 +31,28 @@ function AddPlayers() {
     setList((list) => [...list, userObject]);
 
     setName("");
-    return list;
   };
 
   useEffect(() => {
     const setContext = async () => {
-      await authContext.setGameState({
-        ...authContext.gameState,
+      await authContext.setGame({
+        ...authContext.game.gameState,
         ["players"]: list,
       });
+
       await localStorage.setItem(
         "game",
         JSON.stringify({
-          num: list.length,
-          players: [...list],
-          winners: [],
+          ...authContext.game.gameState,
+
+          ["players"]: [...list],
         }),
       );
     };
-
     setContext();
   }, [list]);
+
+  console.log(authContext.game.gameState);
 
   return (
     <>

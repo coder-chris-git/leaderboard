@@ -5,18 +5,22 @@ const GameContext = createContext(null);
 const { Provider } = GameContext;
 
 const GameProvider = ({ children }) => {
-  const [gameState, setGamesState] = useState({
-    players: [],
-    rounds: [],
-    eliminated: [],
-    winner: {},
+  const [game, setGame] = useState({
+    _id: "",
+    gameState: {
+      players: [],
+      rounds: [],
+      eliminated: [],
+      winner: {},
+    },
+    title: "",
   });
 
   return (
     <Provider
       value={{
-        gameState,
-        setGamesState,
+        game,
+        setGame,
       }}
     >
       {children}
